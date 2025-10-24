@@ -1,0 +1,129 @@
+# AutoML Insight
+
+AutoML Insight es una plataforma modular para el análisis inteligente de datos y la ejecución de modelos de Machine Learning de manera automatizada. Su objetivo es permitir que usuarios técnicos y no técnicos puedan cargar datasets, explorar su información y ejecutar modelos predictivos sin complejidad operativa, manteniendo estándares de calidad, escalabilidad y buenas prácticas de arquitectura.
+
+---
+
+## 1. Propósito del Proyecto
+
+AutoML Insight busca agilizar la transformación de datos en conocimiento accionable. Para ello, la plataforma permite:
+
+- Cargar y gestionar datasets estructurados
+- Explorar columnas, tipos, valores nulos y estadísticas iniciales
+- Ejecutar análisis y modelos de Machine Learning en un entorno controlado
+- Registrar resultados, métricas y visualizaciones
+- Permitir la integración futura con interfaces web o BI
+
+Este proyecto está diseñado como base sólida para evolucionar hacia un producto SaaS o una solución interna corporativa.
+
+---
+
+## 2. Arquitectura General
+
+El sistema se compone de tres servicios principales:
+
+| Componente | Descripción | Tecnologías |
+|------------|-------------|-------------|
+| **API** | Gestión de usuarios, autenticación, datasets y coordinación de análisis | Node.js, TypeScript, Express, Prisma, PostgreSQL |
+| **ML Service** | Procesamiento de datos, lectura de archivos, extracción de metadata y ejecución de modelos | Python, FastAPI, Pandas, Scikit-Learn |
+| **Web Client (futuro)** | Interfaz para interacción del usuario final | React + TypeScript |
+
+### Diagrama General
+
+[ Usuario ]
+|
+v
+[ Web Client ] ---> [ API - Node.js ] ---> [ PostgreSQL ]
+|
+v
+[ ML Service - Python ]
+
+yaml
+Copiar código
+
+---
+
+## 3. Tecnologías Principales
+
+- **Backend (API):** Node.js, Express, TypeScript, Prisma ORM
+- **ML Service:** Python, FastAPI, Pandas, Scikit-Learn
+- **Base de Datos:** PostgreSQL
+- **Infraestructura:** Docker, Docker Compose
+- **Seguridad:** JWT, Bcrypt
+- **Arquitectura:** Modular, desacoplada y escalable
+
+---
+
+## 4. Instalación y Ejecución Local
+
+### Requisitos Previos
+
+- Node.js 18+
+- Python 3.10+
+- Docker y Docker Compose
+
+---
+
+### 4.1 Levantar base de datos
+
+```bash
+docker compose up -d
+4.2 Instalación y ejecución de la API
+bash
+Copiar código
+cd apps/api
+npm install
+npm run prisma:generate
+npm run prisma:migrate
+npm run dev
+La API quedará disponible en:
+
+arduino
+Copiar código
+http://localhost:3000
+4.3 Instalación y ejecución del ML Service
+bash
+Copiar código
+cd apps/ml
+python -m venv venv
+venv/Scripts/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+El servicio ML quedará disponible en:
+
+arduino
+Copiar código
+http://localhost:8000
+5. Endpoints Iniciales
+Método	Endpoint	Descripción	Protección
+POST	/auth/register	Registrar usuario	Public
+POST	/auth/login	Obtener token JWT	Public
+POST	/datasets/upload	Subir dataset y registrar metadata	JWT
+
+6. Seguridad y Manejo de Credenciales
+Variables requeridas en .env (API):
+
+ini
+Copiar código
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/automl_insight"
+JWT_SECRET="set_your_secret_here"
+ML_BASE_URL="http://localhost:8000"
+7. Roadmap del Proyecto
+Etapa	Objetivo
+Short Term	Metadata completa, selección de modelos, gráficos automáticos
+Mid Term	Dashboard Web, análisis comparativos, exportación de reportes
+Long Term	Autotuning, despliegue cloud y versión SaaS multiusuario
+
+8. Estructura del Repositorio
+bash
+Copiar código
+apps/
+├─ api/        # Node.js (Auth, Datasets, Coordination)
+├─ ml/         # FastAPI (ML processing and models)
+└─ web/        # React (futuro)
+9. Autor
+Alejandro Muñoz Garay
+LinkedIn
+
+10. Licencia
+Proyecto bajo licencia MIT.
