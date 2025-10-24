@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  password  String
+  createdAt DateTime  @default(now())
+  analyses  Analysis[]
+  datasets  Dataset[]
+}
+
+model Dataset {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  filename    String
+  mimetype    String
+  size        Int
+  storagePath String      // dónde se guarda el archivo en el servidor
+  schemaJson  Json
+  createdAt   DateTime    @default(now())
+  analyses    Analysis[]
+}
+
+model Analysis {
+  id             String    @id @default(cuid())
+  userId         String
+  datasetId      String
+  algorithm      String
+  status         String     @default("pending")
+  paramsJson     Json
+  metricsJson    Json?
+  predictionsCSV String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id])
+  dataset        Dataset   @relation(fields: [datasetId], references: [id])
+  charts         Chart[]
+}
+
+model Chart {
+  id         String   @id @default(cuid())
+  analysisId String
+  type       String
+  imageBase64 String
+  analysis   Analysis @relation(fields: [analysisId], references: [id])
+}
