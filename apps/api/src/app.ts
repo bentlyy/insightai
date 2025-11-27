@@ -4,12 +4,14 @@ import { env } from "./config/env.js";
 
 import authRoutes from "./modules/auth/auth.routes.js";
 import datasetRoutes from "./modules/datasets/dataset.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRoutes);
+app.use(errorHandler);
 app.use("/datasets", datasetRoutes);
 
 app.get("/", (_, res) => {

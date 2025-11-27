@@ -1,26 +1,26 @@
-import { Request, Response } from "express";
-import { authService } from "./auth.service.js";
+// src/modules/auth/auth.controller.ts
+import { NextFunction, Request, Response } from "express";
+import { loginSchema, registerSchema } from "./auth.dto.js";
+import { AuthService } from "./auth.service.js";
 
-class AuthController {
-  async register(req: Request, res: Response) {
-    const { email, password, name } = req.body;
+export class AuthController {
+  static async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await authService.register(email, password, name);
-      return res.status(201).json(user);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
+      const data = registerSchema.parse(req.body);
+      const result = await AuthService.register(data);
+      res.status(201).json(result);
+    } catch (error) {
+      next(error);
     }
   }
 
-  async login(req: Request, res: Response) {
-    const { email, password } = req.body;
+  static async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await authService.login(email, password);
-      return res.json(data);
-    } catch (error: any) {
-      return res.status(400).json({ error: error.message });
+      const data = loginSchema.parse(req.body);
+      const result = await AuthService.login(data);
+      res.json(result);
+    } catch (error) {
+      next(error);
     }
   }
 }
-
-export const authController = new AuthController();
